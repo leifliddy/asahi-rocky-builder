@@ -6,7 +6,7 @@ mkosi_rootfs='mkosi.rootfs'
 image_dir='images'
 image_mnt='mnt_image'
 date=$(date +%Y%m%d)
-image_name=asahi-base-${date}-1
+image_name=asahi-rocky-${date}-1
 
 # this has to match the volume_id in installer_data.json
 # "volume_id": "0x2abf9f91"
@@ -22,18 +22,18 @@ fi
 mkdir -p $image_mnt $mkosi_rootfs $image_dir/$image_name
 
 mkosi_create_rootfs() {
-    umount_image
-    mkosi clean
-    rm -rf .mkosi-*
     mkdir -p mkosi.skeleton/etc/yum.repos.d
     curl https://leifliddy.com/asahi-linux/asahi-linux.repo --output mkosi.skeleton/etc/yum.repos.d/asahi-linux.repo
     [[ ! -L mkosi.reposdir ]] && ln -s mkosi.skeleton/etc/yum.repos.d/ mkosi.reposdir
+    umount_image
+    rm -rf .mkosi-*
+    mkosi clean
     mkosi
 }
 
 mount_image() {
     # get last modified image
-    image_path=$(find $image_dir -maxdepth 1 -type d | grep -E /asahi-base-[0-9]{8}-[0-9] | sort | tail -1)
+    image_path=$(find $image_dir -maxdepth 1 -type d | grep -E /asahi-rocky-[0-9]{8}-[0-9] | sort | tail -1)
 
     [[ -z $image_path ]] && echo -n "image not found in $image_dir\nexiting..." && exit
 
@@ -168,6 +168,9 @@ make_image() {
     echo -e '\n### Creating EFI system partition tree'
     mkdir -p $image_dir/$image_name/esp/
     rsync -aHAX $image_mnt/boot/efi/ $image_dir/$image_name/esp/
+
+    # ensure the xfs partition is checked on the first boot
+    touch $image_mnt/forcefsck
 
     ###### post-install cleanup ######
     echo -e '\n### Cleanup'
