@@ -96,9 +96,9 @@ make_image() {
     echo '### Creating ext4 filesystem on boot.img '
     mkfs.ext4 -U $BOOT_UUID -L rl_boot -b 4096 images/$image_name/boot.img
 
-    ###### create ext4 filesystem on root.img ######
-    echo '### Creating ext4 filesystem on root.img '
-    mkfs.ext4 -U $ROOT_UUID -L rl_root -b 4096 $image_dir/$image_name/root.img
+    ###### create xfs filesystem on root.img ######
+    echo '### Creating xfs filesystem on root.img '
+    mkfs.xfs -m uuid=$ROOT_UUID -L rl_root -s size=4096 $image_dir/$image_name/root.img
 
     echo '### Loop mounting root.img'
     mount -o loop $image_dir/$image_name/root.img $image_mnt
@@ -115,7 +115,7 @@ make_image() {
     sed -i "s/EFI_UUID_PLACEHOLDER/$EFI_UUID/" $image_mnt/etc/fstab
     echo '### Setting uuid for boot partition in /etc/fstab'
     sed -i "s/BOOT_UUID_PLACEHOLDER/$BOOT_UUID/" $image_mnt/etc/fstab
-    echo '### Setting uuid for ext4 partition in /etc/fstab'
+    echo '### Setting uuid for xfs partition in /etc/fstab'
     sed -i "s/ROOT_UUID_PLACEHOLDER/$ROOT_UUID/" $image_mnt/etc/fstab
 
     # remove resolv.conf symlink -- this causes issues with arch-chroot
