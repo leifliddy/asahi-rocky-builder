@@ -1,8 +1,8 @@
-# asahi-fedora-builder
+# asahi-rocky-builder
 
 Builds a minimal Rocky Linux image to run on Apple M1/M2 systems
 
-<img src="https://user-images.githubusercontent.com/12903289/200475188-41b1faf1-9b00-4376-ad8c-b9da19ef4d3f.png" width=65%>
+<img src="https://user-images.githubusercontent.com/12903289/230797409-90e1df3a-a770-4631-84d2-7166609aa9cf.png" width=65%>
 
 ## Installing a Prebuilt Image
 
@@ -12,9 +12,8 @@ Make sure to update your macOS to version 12.3 or later, then just pull up a Ter
 curl https://leifliddy.com/rocky.sh | sh
 ```
 
-This image was build on a Fedora system
-
 ## Fedora Package Install
+This image was built on a Fedora system  
 
 ```dnf install arch-install-scripts bubblewrap systemd-container zip```
 
@@ -29,7 +28,7 @@ This image was build on a Fedora system
 
 1. The root password is **rocky**
 2. On the first boot the ```asahi-firstboot.service``` will run, selinux will be set to enforcing and the system will reboot.
-3. This project utilizes rebuilt packages from the `Asahi Fedora Remix` project
+3. This project utilizes rebuilt packages from the `Asahi Fedora Remix` project  
 https://leifliddy.com/asahi-linux/9/aarch64/
 
 ## Setting up WiFi
@@ -51,8 +50,8 @@ You should definitely understand what this script does before running it. You ca
 
 ## Boot from USB device
 
-Once Linux is installed on an M1/M2 system, you can then boot a compatible usb drive via ```u-boot```.
-This project will create a bootable USB drive for M1 systems.
+Once Linux is installed on an M1/M2 system, you can then boot a compatible usb drive via ```u-boot```  
+This project will create a bootable USB drive for M1 systems:  
 <https://github.com/leifliddy/asahi-fedora-usb>
 
 ## Display and keyboard backlight
