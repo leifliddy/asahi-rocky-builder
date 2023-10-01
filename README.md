@@ -52,8 +52,8 @@ You can find more info here:
 ## Boot from USB device
 
 Once Linux is installed on an M1/M2 system, you can then boot a compatible usb drive via ```u-boot```  
-This project will create a bootable USB drive for M1 systems:  
-<https://github.com/leifliddy/asahi-fedora-usb>
+This project will create a bootable Rocky Linux USB drive for M1 systems:  
+<https://github.com/leifliddy/asahi-rocky-usb>
 
 ## Display and keyboard backlight
 
