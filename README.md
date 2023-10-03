@@ -17,11 +17,8 @@ This image was built on a Fedora system
 
 ```dnf install arch-install-scripts bubblewrap systemd-container zip```
 
-### Notes
-
-- ```qemu-user-static``` is also needed if building the image on a ```non-aarch64``` system
-- Until this PR is merged into the next `mkosi` release <https://github.com/systemd/mkosi/pull/1264/commits>
-- Until version 15.x is released for Fedora, install mksoi from git:
+**note:** ```qemu-user-static``` is only needed if building on a non-```aarch64``` system.  
+- Until version 15.x is released for Fedora, install mksoi from git:  
 `python3 -m pip install --user git+https://github.com/systemd/mkosi.git@v15.1`
 
 ### Notes
