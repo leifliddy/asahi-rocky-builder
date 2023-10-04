@@ -2,7 +2,7 @@
 
 Builds a minimal Rocky Linux image to run on Apple M1/M2 systems
 
-<img src="https://user-images.githubusercontent.com/12903289/230797409-90e1df3a-a770-4631-84d2-7166609aa9cf.png" width=65%>
+<img src="https://github.com/leifliddy/asahi-rocky-builder/assets/12903289/3869b182-2eb9-4a46-8f65-0da3366cfd6a" width=65%>
 
 ## Installing a Prebuilt Image
 
@@ -13,13 +13,15 @@ curl https://leifliddy.com/rocky.sh | sh
 ```
 
 ## Fedora Package Install
-This image was built on a Fedora system  
+This image was built on a Fedora system
 
 ```dnf install arch-install-scripts bubblewrap systemd-container zip```
 
-**note:** ```qemu-user-static``` is only needed if building on a non-```aarch64``` system.  
+### Notes
+
+- ```qemu-user-static``` is also needed if building the image on a ```non-aarch64``` system  
 - Until version 15.x is released for Fedora, install mksoi from git:  
-`python3 -m pip install --user git+https://github.com/systemd/mkosi.git@v15.1`
+  `python3 -m pip install --user git+https://github.com/systemd/mkosi.git@v15.1`
 
 ### Notes
 
@@ -42,9 +44,8 @@ An actual example:
 
 Bring up a Terminal in macOS and run the following Asahi Linux script:  
 ```sudo curl -L https://alx.sh/wipe-linux | sh```  
-You should definitely understand what this script does before running it.  
-You can find more info here:  
-<https://github.com/AsahiLinux/docs/wiki/Partitioning-cheatsheet>
+You should definitely understand what this script does before running it. You can find more info here:  
+<https://github.com/AsahiLinux/docs/wiki/Partitioning-cheatsheet>  
 
 ## Boot from USB device
 

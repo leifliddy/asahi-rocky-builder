@@ -24,11 +24,13 @@ mkdir -p $image_mnt $mkosi_rootfs $image_dir/$image_name
 mkosi_create_rootfs() {
     mkdir -p mkosi.skeleton/etc/yum.repos.d
     curl https://leifliddy.com/asahi-linux/asahi-linux.repo --output mkosi.skeleton/etc/yum.repos.d/asahi-linux.repo
-    [[ ! -L mkosi.reposdir ]] && ln -s mkosi.skeleton/etc/yum.repos.d/ mkosi.reposdir
     umount_image
     rm -rf .mkosi-*
-    mkosi clean
+    rm -rf $mkosi_rootfs
     mkosi
+    # not sure how/why a mkosi_rootfs/root/asahi-rocky-builder dirrectory is being created
+    # remove it like this to account for it being named something different
+    find $mkosi_rootfs/root/ -maxdepth 1 -mindepth 1 -type d | grep -Ev '/\..*$' | xargs rm -rf    
 }
 
 mount_image() {
@@ -96,9 +98,9 @@ make_image() {
     echo '### Creating ext4 filesystem on boot.img '
     mkfs.ext4 -U $BOOT_UUID -L rl_boot -b 4096 images/$image_name/boot.img
 
-    ###### create xfs filesystem on root.img ######
-    echo '### Creating xfs filesystem on root.img '
-    mkfs.xfs -m uuid=$ROOT_UUID -L rl_root -s size=4096 $image_dir/$image_name/root.img
+    ###### create ext4 filesystem on root.img ######
+    echo '### Creating ext4 filesystem on root.img '
+    mkfs.ext4 -U $ROOT_UUID -L rl_root -b 4096 $image_dir/$image_name/root.img
 
     echo '### Loop mounting root.img'
     mount -o loop $image_dir/$image_name/root.img $image_mnt
@@ -115,7 +117,7 @@ make_image() {
     sed -i "s/EFI_UUID_PLACEHOLDER/$EFI_UUID/" $image_mnt/etc/fstab
     echo '### Setting uuid for boot partition in /etc/fstab'
     sed -i "s/BOOT_UUID_PLACEHOLDER/$BOOT_UUID/" $image_mnt/etc/fstab
-    echo '### Setting uuid for xfs partition in /etc/fstab'
+    echo '### Setting uuid for ext4 partition in /etc/fstab'
     sed -i "s/ROOT_UUID_PLACEHOLDER/$ROOT_UUID/" $image_mnt/etc/fstab
 
     # remove resolv.conf symlink -- this causes issues with arch-chroot
@@ -172,7 +174,8 @@ make_image() {
     ###### post-install cleanup ######
     echo -e '\n### Cleanup'
     rm -rf $image_mnt/boot/efi/*
-    rm -rf $image_mnt/boot/lost+found/
+    rm -rf $image_mnt/boot/lost+found
+    rm -f  $image_mnt/init
     rm -f  $image_mnt/etc/machine-id
     rm -f  $image_mnt/etc/kernel/{entry-token,install.conf}
     rm -rf $image_mnt/image.creation
