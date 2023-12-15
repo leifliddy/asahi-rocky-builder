@@ -22,15 +22,15 @@ if [ "$(whoami)" != 'root' ]; then
     exit 1
 fi
 
-mkdir -p $im# ./build.sh mount
-#  or
-# ./build.sh umount
-#  to mount or unmount an image (that was previously created by this script) to/from mnt_image/age_mnt $mkosi_rootfs $image_dir/$image_name
+[ ! -d $mnt_image ] && mkdir $mnt_image
+[ ! -d $mkosi_output ] && mkdir $mkosi_output
+[ ! -d $mkosi_cache ] && mkdir $mkosi_cache
+[ ! -d $image_dir/$image_name ] && mkdir -p $image_dir/$image_name\
 
 mkosi_create_rootfs() {
     umount_image
     mkosi clean
-    mkosi  
+    mkosi
 }
 
 mount_image() {
@@ -192,7 +192,7 @@ make_image() {
     rm -rf $mnt_image/image.creation
     rm -f  $mnt_image/etc/dracut.conf.d/initial-boot.conf
     rm -f  $mnt_image/var/lib/systemd/random-seed
-    sed -i '/GRUB_DISABLE_OS_PROBER=true/d' $mnt_image/etc/default/grub    
+    sed -i '/GRUB_DISABLE_OS_PROBER=true/d' $mnt_image/etc/default/grub
     chroot $mnt_image ln -s ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
     # not sure how/why a $mnt_image/root/asahi-rocky-builder directory is being created
     # remove it like this to account for it being named something different
