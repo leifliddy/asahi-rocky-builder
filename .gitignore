@@ -1,8 +1,4 @@
-images/
-mkosi.rootfs/
-mkosi.rootfs.manifest
-.mkosi-*
-mnt_image/
-mkosi.reposdir/
-yum.repos.d/
-asahi-linux.repo
+images
+mnt_image
+mkosi.cache
+mkosi.output
