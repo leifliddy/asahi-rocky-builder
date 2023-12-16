@@ -43,6 +43,8 @@ mount_image() {
     [[ -z "$(findmnt -n $mnt_image)" ]] && mount -o loop $image_path/root.img $mnt_image
     [[ -z "$(findmnt -n $mnt_image/boot)" ]] && mount -o loop $image_path/boot.img $mnt_image/boot
     [[ -z "$(findmnt -n $mnt_image/boot/efi)" ]] && mount --bind  $image_path/esp/ $mnt_image/boot/efi/
+    # we need this since we're using set -e
+    return 0
 }
 
 umount_image() {
