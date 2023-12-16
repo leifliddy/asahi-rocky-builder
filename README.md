@@ -1,6 +1,6 @@
 # asahi-rocky-builder
 
-Builds a minimal Rocky Linux image to run on Apple M1/M2 systems
+Builds a minimal Rocky Linux image to run on Apple silicon systems
 
 <img src="https://github.com/leifliddy/asahi-rocky-builder/assets/12903289/3869b182-2eb9-4a46-8f65-0da3366cfd6a" width=65%>
 
@@ -53,8 +53,8 @@ You should definitely understand what this script does before running it. You ca
 
 ## Boot from USB device
 
-Once Linux is installed on an M1/M2 system, you can then boot a compatible usb drive via ```u-boot```  
-This project will create a bootable Rocky Linux USB drive for M1 systems:  
+Once Linux is installed, you can then boot a compatible usb drive via ```u-boot```  
+This project will create a bootable Rocky Linux USB drive for Apple silicon systems:  
 <https://github.com/leifliddy/asahi-rocky-usb>
 
 ## Persistently set your battery charge threshold to 80%
