@@ -2,30 +2,27 @@
 
 set -e
 
-mkosi_rootfs='mkosi.rootfs'
-image_dir='images'
+mkosi_output='mkosi.output'
+mkosi_rootfs="$mkosi_output/image"
+mkosi_cache='mkosi.cache'
 mnt_image="$(pwd)/mnt_image"
+image_dir='images'
 date=$(date +%Y%m%d)
 image_name=asahi-rocky-${date}-1
 
-# this has to match the volume_id # ./build.sh mount
-#  or
-# ./build.sh umount
-#  to mount or unmount an image (that was previously created by this script) to/from mnt_image/in installer_data.json
+# this has to match the volume_id in installer_data.json
 # "volume_id": "0x2abf9f91"
 EFI_UUID=2ABF-9F91
 BOOT_UUID=$(uuidgen)
 ROOT_UUID=$(uuidgen)
 
-if [ "$(whoami)" != 'root' ]; then
-    echo "You must be root to run this script."
-    exit 1
-fi
+[[ "$(whoami)" != 'root' ]] && echo "You must run this script as root" && exit 1
+[[ -n $SUDO_UID ]] && [[ $SUDO_UID -ne 0 ]] && echo "You must run this script as root and not with sudo" && exit 1
 
 [ ! -d $mnt_image ] && mkdir $mnt_image
 [ ! -d $mkosi_output ] && mkdir $mkosi_output
 [ ! -d $mkosi_cache ] && mkdir $mkosi_cache
-[ ! -d $image_dir/$image_name ] && mkdir -p $image_dir/$image_name\
+[ ! -d $image_dir/$image_name ] && mkdir -p $image_dir/$image_name
 
 mkosi_create_rootfs() {
     umount_image
@@ -126,10 +123,13 @@ make_image() {
     mount -o loop $image_dir/$image_name/boot.img $mnt_image/boot
 
     echo '### Copying files'
-    rsync -aHAX --exclude '/tmp/*' --exclude '/boot/*' $mkosi_rootfs/ $mnt_image
+    rsync -aHAX --exclude '/tmp/*' --exclude '/boot/*' --exclude '/efi' $mkosi_rootfs/ $mnt_image
     rsync -aHAX $mkosi_rootfs/boot/ $mnt_image/boot
     # mkosi >=v18 creates the following symlink in /boot: efi -> ../efi
+
     [[ -L $mnt_image/boot/efi ]] && rm -f $mnt_image/boot/efi
+    rsync -aHAX $mkosi_rootfs/efi $mnt_image/boot
+
     echo '### Setting pre-defined uuid for efi vfat partition in /etc/fstab'
     sed -i "s/EFI_UUID_PLACEHOLDER/$EFI_UUID/" $mnt_image/etc/fstab
     echo '### Setting uuid for boot partition in /etc/fstab'
@@ -164,10 +164,6 @@ make_image() {
     mkdir -p $mnt_image/boot/efi/m1n1
     arch-chroot $mnt_image update-m1n1 /boot/efi/m1n1/boot.bin
 
-    # adding a small delay prevents this error msg from polluting the console
-    # device (wlan0): interface index 2 renamed iface from 'wlan0' to 'wlp1s0f0'
-    echo -e '\n### Adding delay to NetworkManager.service'
-    sed -i '/ExecStart=.*$/iExecStartPre=/usr/bin/sleep 2' $mnt_image/usr/lib/systemd/system/NetworkManager.service
     echo "### Enabling system services"
     arch-chroot $mnt_image systemctl enable NetworkManager sshd systemd-resolved
     echo "### Disabling systemd-firstboot"
