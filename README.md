@@ -2,7 +2,7 @@
 
 Builds a minimal Rocky Linux image to run on Apple silicon systems
 
-<img src="https://github.com/leifliddy/asahi-rocky-builder/assets/12903289/3869b182-2eb9-4a46-8f65-0da3366cfd6a" width=65%>
+<img src="https://github.com/leifliddy/asahi-rocky-builder/assets/12903289/567206d3-c2bd-42fa-b1a7-b3c9e0dd553a" width=65%>
 
 ## Installing a Prebuilt Image
 
